@@ -34,17 +34,18 @@ public class TicTacToe {
         System.out.println(player2.getPlayerName() + " will be playing as " + player2.getPlayersMark());
     }
 
-    private int selectNumberOfPlayers(){
+    private int selectNumberOfPlayers() {
         System.out.print("\nHow many players? ");
-        int numberOfPlayers = input.nextInt();
-        while (true){
-            if (numberOfPlayers == 1 || numberOfPlayers == 2) {
-                break;
-            } else {
-                System.out.print("How many players? 1 or 2? ");
-                numberOfPlayers = input.nextInt();
+        int numberOfPlayers;
+        numberOfPlayers = input.nextInt();
+        while (true) {
+                if (numberOfPlayers == 1 || numberOfPlayers == 2) {
+                    break;
+                } else {
+                    System.out.print("How many players? 1 or 2? ");
+                    numberOfPlayers = input.nextInt();
+                }
             }
-        }
         return numberOfPlayers;
     }
 

@@ -2,7 +2,7 @@ package tic_tac_toe;
 
 import java.util.Random;
 
-public class Computer extends Player{
+public class Computer extends Player {
 
     private final Random random = new Random();
 

@@ -8,17 +8,17 @@ public class Main {
 
         System.out.println("Welcome to Tic-Tac-Toe.");
         Scanner scanner = new Scanner(System.in);
-        while(true) {
-            try{
+        while (true) {
+            try {
                 new TicTacToe();
                 System.out.print("\nAnother game? ");
                 String input = scanner.nextLine();
-                if(!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) {
+                if (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) {
                     System.out.print("Y or N? ");
-                }else if (input.equalsIgnoreCase("n")){
+                } else if (input.equalsIgnoreCase("n")) {
                     break;
                 }
-            } catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.out.println("You entered an invalid input. Try again.");
             }
         }

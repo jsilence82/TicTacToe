@@ -14,23 +14,23 @@ public class TicTacToe {
         gameLoop();
     }
 
-    private void playerCreate(){
+    private void playerCreate() {
         int numberOfPlayers = selectNumberOfPlayers();
-            try{
-                System.out.print("Player 1's name: ");
-                String player1Name = input.next();
-                player1 = new Player(player1Name, "X");
-                System.out.println(player1.getPlayerName() + " will be playing as " + player1.getPlayersMark());
-                if(numberOfPlayers == 2){
-                    System.out.print("Player 2's name: ");
-                    String player2Name = input.next();
-                    player2 = new Player(player2Name,"O");
-                } else{
-                    player2 = new Computer();
-                }
-            }catch (InputMismatchException e){
-                System.out.println("You entered an invalid value. Try again.");
+        try {
+            System.out.print("Player 1's name: ");
+            String player1Name = input.next();
+            player1 = new Player(player1Name, "X");
+            System.out.println(player1.getPlayerName() + " will be playing as " + player1.getPlayersMark());
+            if (numberOfPlayers == 2) {
+                System.out.print("Player 2's name: ");
+                String player2Name = input.next();
+                player2 = new Player(player2Name, "O");
+            } else {
+                player2 = new Computer();
             }
+        } catch (InputMismatchException e) {
+            System.out.println("You entered an invalid value. Try again.");
+        }
         System.out.println(player2.getPlayerName() + " will be playing as " + player2.getPlayersMark());
     }
 
@@ -39,13 +39,13 @@ public class TicTacToe {
         int numberOfPlayers;
         numberOfPlayers = input.nextInt();
         while (true) {
-                if (numberOfPlayers == 1 || numberOfPlayers == 2) {
-                    break;
-                } else {
-                    System.out.print("How many players? 1 or 2? ");
-                    numberOfPlayers = input.nextInt();
-                }
+            if (numberOfPlayers == 1 || numberOfPlayers == 2) {
+                break;
+            } else {
+                System.out.print("How many players? 1 or 2? ");
+                numberOfPlayers = input.nextInt();
             }
+        }
         return numberOfPlayers;
     }
 
@@ -58,7 +58,7 @@ public class TicTacToe {
         int turn = 0;
         Board board = new Board();
 
-        while (true){
+        while (true) {
             if (board.boardIsFull()) {
                 System.out.println("\nIt's a draw!");
                 break;
@@ -73,7 +73,7 @@ public class TicTacToe {
                     if (board.checkWinner(players[turn].getPlayersMark())) {
                         System.out.println("\n" + players[turn].getPlayerName() + " Wins!");
                         break;
-                    }else{
+                    } else {
                         turn = (turn + 1) % 2;
                     }
                 }

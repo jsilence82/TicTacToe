@@ -6,8 +6,8 @@ public class Computer extends Player{
 
     private final Random random = new Random();
 
-    public Computer(String playerName) {
-        super(playerName);
+    public Computer() {
+        super("Computer", "O");
     }
 
     @Override

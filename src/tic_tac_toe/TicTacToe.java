@@ -38,11 +38,11 @@ public class TicTacToe {
         System.out.print("\nHow many players? ");
         int numberOfPlayers = input.nextInt();
         while (true){
-            if(numberOfPlayers != 1 && numberOfPlayers != 2){
+            if (numberOfPlayers == 1 || numberOfPlayers == 2) {
+                break;
+            } else {
                 System.out.print("How many players? 1 or 2? ");
                 numberOfPlayers = input.nextInt();
-            } else {
-                break;
             }
         }
         return numberOfPlayers;

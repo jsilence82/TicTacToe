@@ -1,4 +1,4 @@
-package tic_tac_toe;
+package tic_tac_toe.players;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -6,11 +6,15 @@ import java.util.stream.IntStream;
 
 public class Board {
 
+
     private final String[][] board = new String[3][3];
 
     public Board() {
         initializeBoard();
-        printBoard();
+    }
+
+    public String[][] getBoard() {
+        return board;
     }
 
     public void initializeBoard() {

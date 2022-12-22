@@ -1,63 +1,57 @@
 package tic_tac_toe;
 
-import java.util.InputMismatchException;
+import tic_tac_toe.players.Board;
+import tic_tac_toe.players.Player;
 import java.util.Scanner;
-
 
 public class TicTacToe {
 
     private static Player player1;
     private static Player player2;
+    private static final Factory factory = new Factory();
     private final Scanner input = new Scanner(System.in);
 
-    public TicTacToe() throws InterruptedException {
+    public TicTacToe() {
         gameLoop();
     }
 
-    private void playerCreate() {
-        int numberOfPlayers = selectNumberOfPlayers();
-        try {
-            System.out.print("Player 1's name: ");
-            String player1Name = input.next();
-            player1 = new Player(player1Name, "X");
-            System.out.println(player1.getPlayerName() + " will be playing as " + player1.getPlayersMark());
-            if (numberOfPlayers == 2) {
-                System.out.print("Player 2's name: ");
-                String player2Name = input.next();
-                player2 = new Player(player2Name, "O");
-            } else {
-                player2 = new Computer();
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("You entered an invalid value. Try again.");
-        }
-        System.out.println(player2.getPlayerName() + " will be playing as " + player2.getPlayersMark());
+
+    private void playerCreate(Board board) {
+        int opponent = selectOpponent();
+        player1 = factory.playerFactory(1, "X", board);
+        player2 = factory.playerFactory(opponent, "O", board);
     }
 
-    private int selectNumberOfPlayers() {
-        System.out.print("\nHow many players? ");
-        int numberOfPlayers;
-        numberOfPlayers = input.nextInt();
+    private int selectOpponent(){
+        System.out.println("\nSelect from the following opponents:");
+        System.out.println();
+        System.out.printf("%6s", "1: Another human player." );
+        System.out.println();
+        System.out.printf("%6s", "2: Computer picking randomly (Easy)." );
+        System.out.println();
+        System.out.printf("%6s", "3: Computer AI (Hard)." );
+        System.out.print("\nYour Opponent: ");
+        int opponent;
+        opponent = input.nextInt();
         while (true) {
-            if (numberOfPlayers == 1 || numberOfPlayers == 2) {
+            if (opponent == 1 || opponent == 2 || opponent == 3) {
                 break;
             } else {
-                System.out.print("How many players? 1 or 2? ");
-                numberOfPlayers = input.nextInt();
+                System.out.print("Select 1, 2, 3 ");
+                opponent = input.nextInt();
             }
         }
-        return numberOfPlayers;
+        return opponent;
     }
 
+    public void gameLoop(){
 
-    public void gameLoop() throws InterruptedException {
-
-        playerCreate();
+        Board board = new Board();
+        playerCreate(board);
 
         Player[] players = {player1, player2};
         int turn = 0;
-        Board board = new Board();
-
+        board.printBoard();
         while (true) {
             if (board.boardIsFull()) {
                 System.out.println("\nIt's a draw!");

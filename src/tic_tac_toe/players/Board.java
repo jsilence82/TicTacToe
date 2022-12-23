@@ -30,7 +30,7 @@ public class Board {
         board[playersPick[0]][playersPick[1]] = playerMark;
     }
 
-    public int[] boardCoordinates(int space) {
+    public int[] spaceToBoardCoordinates(int space) {
         int[] coordinates = new int[2];
         switch (space) {
             case 1:
@@ -65,6 +65,10 @@ public class Board {
                 break;
         }
         return coordinates;
+    }
+
+    public int boardCoordinatesToSpace(int row, int column) {
+        return Integer.parseInt(getBoard()[row][column]);
     }
 
     public void printBoard() {

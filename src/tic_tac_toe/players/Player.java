@@ -1,13 +1,14 @@
 package tic_tac_toe.players;
 
 public abstract class Player {
-
+    static int playerNumber = 0;
     private String playerName;
     private final String playersMark;
 
     public Player(String playerName, String playersMark) {
         this.playerName = playerName;
         this.playersMark = playersMark;
+        playerNumber++;
     }
 
     public String getPlayerName() {
@@ -18,6 +19,9 @@ public abstract class Player {
         this.playerName = playerName;
     }
 
+    public void dispose(){
+        playerNumber--;
+    }
 
     public String getPlayersMark() {
         return playersMark;

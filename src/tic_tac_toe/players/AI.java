@@ -5,13 +5,23 @@ import java.util.Objects;
 public class AI extends Player {
 
     Board board;
-    static String computer = "O", opponent = "X";
-    static class Move {int row, col;}
+    String computer;
+    String opponent;
 
-    public AI(Board board) {
-        super("AI Computer", "O");
+    static class Move {
+        int row, col;
+    }
+
+    public AI(Board board, String playersMark) {
+        super("AI Computer", playersMark);
         this.board = board;
-        System.out.println(getPlayerName() + " will be playing as " + getPlayersMark());
+        this.computer = playersMark;
+        if (playersMark.equals("O")) {
+            this.opponent = "X";
+        } else {
+            this.opponent = "O";
+        }
+        System.out.println(getPlayerName() + " will play as " + getPlayersMark());
     }
 
     @Override
@@ -19,33 +29,6 @@ public class AI extends Player {
         System.out.println("The AI evaluates and is picking...");
         Move bestMove = findBestMove(board);
         return board.boardCoordinatesToSpace(bestMove.row, bestMove.col);
-    }
-
-    private Move findBestMove(Board board) {
-        int bestValue = -1000;
-        Move bestMove = new Move();
-        bestMove.row = -1;
-        bestMove.col = -1;
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (!Objects.equals(board.getBoard()[i][j], "X") && !Objects.equals(board.getBoard()[i][j], "O")) {
-                    String temp = board.getBoard()[i][j];
-                    int[] move = {i, j};
-                    board.placePlayersMark(move, computer);
-                    int moveValue = minimax(board, 0, false);
-                    board.placePlayersMark(move, temp);
-
-                    // If the value of the current move is more than the best value, then update
-                    if (moveValue > bestValue) {
-                        bestMove.row = i;
-                        bestMove.col = j;
-                        bestValue = moveValue;
-                    }
-                }
-            }
-        }
-        return bestMove;
     }
 
     private int evaluate(Board board) {
@@ -85,7 +68,34 @@ public class AI extends Player {
         return 0;
     }
 
-    private int minimax(Board board, int depth, Boolean isMax) {
+    private Move findBestMove(Board board) {
+        int bestValue = -1000;
+        Move bestMove = new Move();
+        bestMove.row = -1;
+        bestMove.col = -1;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
+                    String temp = board.getBoard()[i][j];
+                    int[] move = {i, j};
+                    board.placePlayersMark(move, computer);
+                    int moveValue = minMax(board, 0, false);
+                    board.placePlayersMark(move, temp);
+
+                    // If the value of the current move is more than the best value, then update
+                    if (moveValue > bestValue) {
+                        bestMove.row = i;
+                        bestMove.col = j;
+                        bestValue = moveValue;
+                    }
+                }
+            }
+        }
+        return bestMove;
+    }
+
+    private int minMax(Board board, int depth, Boolean isMax) {
         int score = evaluate(board);
 
         // If Maximizer wins
@@ -106,11 +116,11 @@ public class AI extends Player {
             best = -1000;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (!Objects.equals(board.getBoard()[i][j], "X") && !Objects.equals(board.getBoard()[i][j], "O")) {
+                    if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
                         String temp = board.getBoard()[i][j];
                         int[] move = {i, j};
                         board.placePlayersMark(move, computer);
-                        best = Math.max(best, minimax(board, depth + 1, false));
+                        best = Math.max(best, minMax(board, depth + 1, false));
                         board.placePlayersMark(move, temp);
                     }
                 }
@@ -121,11 +131,11 @@ public class AI extends Player {
             best = 1000;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (!Objects.equals(board.getBoard()[i][j], "X") && !Objects.equals(board.getBoard()[i][j], "O")) {
+                    if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
                         String temp = board.getBoard()[i][j];
                         int[] move = {i, j};
                         board.placePlayersMark(move, opponent);
-                        best = Math.min(best, minimax(board,depth + 1, true));
+                        best = Math.min(best, minMax(board, depth + 1, true));
                         board.placePlayersMark(move, temp);
                     }
                 }

@@ -7,10 +7,10 @@ public class Computer extends Player {
     Board board;
     private final Random random = new Random();
 
-    public Computer(Board board) {
-        super("Random", "O");
+    public Computer(Board board,String playersMark) {
+        super("Random", playersMark);
         this.board = board;
-        System.out.println(getPlayerName() + " will be playing as " + getPlayersMark());
+        System.out.println(getPlayerName() + " will play as " + getPlayersMark());
     }
 
     @Override

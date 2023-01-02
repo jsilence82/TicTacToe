@@ -9,9 +9,10 @@ public class HumanPlayer extends Player {
 
     public HumanPlayer(String playersMark) {
         super("name", playersMark);
-        System.out.print("Player who will be playing as " + getPlayersMark() + "?: ");
+        System.out.print("Player " + playerNumber + " name ?: ");
         String playersName = input.next();
         setPlayerName(playersName);
+        System.out.println(getPlayerName() + " will play as " + getPlayersMark());
     }
 
     public String getPlayerName() {

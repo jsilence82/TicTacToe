@@ -1,16 +1,13 @@
 package tic_tac_toe.players;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class AI extends Player {
 
-    Board board;
-    String computer;
-    String opponent;
-
-    static class Move {
-        int row, col;
-    }
+    private final Board board;
+    private final String computer;
+    private final String opponent;
 
     public AI(Board board, String playersMark) {
         super("AI Computer", playersMark);
@@ -27,52 +24,40 @@ public class AI extends Player {
     @Override
     public int pickASpace() {
         System.out.println("The AI evaluates and is picking...");
-        Move bestMove = findBestMove(board);
-        return board.boardCoordinatesToSpace(bestMove.row, bestMove.col);
+        int[] bestMove = findBestMove(board);
+        return board.boardCoordinatesToSpace(bestMove[0], bestMove[1]);
     }
 
     private int evaluate(Board board) {
-        for (int row = 0; row < 3; row++) {
-            if (Objects.equals(board.getBoard()[row][0], board.getBoard()[row][1]) && Objects.equals(board.getBoard()[row][1], board.getBoard()[row][2])) {
-                if (Objects.equals(board.getBoard()[row][0], computer))
-                    return +10;
-                else if (Objects.equals(board.getBoard()[row][0], opponent))
-                    return -10;
+        HashMap<Integer, String> mappedBoard = new HashMap<>();
+        int hashKey = 1;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                mappedBoard.put(hashKey, board.getBoard()[i][j]);
+                hashKey++;
             }
         }
 
-        for (int col = 0; col < 3; col++) {
-            if (Objects.equals(board.getBoard()[0][col], board.getBoard()[1][col]) &&
-                    Objects.equals(board.getBoard()[1][col], board.getBoard()[2][col])) {
-                if (Objects.equals(board.getBoard()[0][col], computer))
+        int[][] winningConditions = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, // rows
+                {1, 4, 7}, {2, 5, 8}, {3, 6, 9},   // columns
+                {1, 5, 9}, {3, 5, 7}}; // diagonals
+
+        for (int[] spaces : winningConditions) {
+            if (Objects.equals(mappedBoard.get(spaces[0]), mappedBoard.get(spaces[1])) &&
+                    Objects.equals(mappedBoard.get(spaces[1]), mappedBoard.get(spaces[2]))) {
+                if (Objects.equals(mappedBoard.get(spaces[0]), computer)) {
                     return +10;
-
-                else if (Objects.equals(board.getBoard()[0][col], opponent))
+                } else if (Objects.equals(mappedBoard.get(spaces[0]), opponent)) {
                     return -10;
+                }
             }
-        }
-
-        if (Objects.equals(board.getBoard()[0][0], board.getBoard()[1][1]) && Objects.equals(board.getBoard()[1][1], board.getBoard()[2][2])) {
-            if (Objects.equals(board.getBoard()[0][0], computer))
-                return +10;
-            else if (Objects.equals(board.getBoard()[0][0], opponent))
-                return -10;
-        }
-
-        if (Objects.equals(board.getBoard()[0][2], board.getBoard()[1][1]) && Objects.equals(board.getBoard()[1][1], board.getBoard()[2][0])) {
-            if (Objects.equals(board.getBoard()[0][2], computer))
-                return +10;
-            else if (Objects.equals(board.getBoard()[0][2], opponent))
-                return -10;
         }
         return 0;
     }
 
-    private Move findBestMove(Board board) {
+    private int[] findBestMove(Board board) {
         int bestValue = -1000;
-        Move bestMove = new Move();
-        bestMove.row = -1;
-        bestMove.col = -1;
+        int[] bestMove = new int[2];
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -85,8 +70,8 @@ public class AI extends Player {
 
                     // If the value of the current move is more than the best value, then update
                     if (moveValue > bestValue) {
-                        bestMove.row = i;
-                        bestMove.col = j;
+                        bestMove[0] = i;
+                        bestMove[1] = j;
                         bestValue = moveValue;
                     }
                 }
@@ -98,21 +83,18 @@ public class AI extends Player {
     private int minMax(Board board, int depth, Boolean isMax) {
         int score = evaluate(board);
 
-        // If Maximizer wins
+        // If Maximizer wins return 10. Minimizer win return -10. If tie return 0.
         if (score == 10)
             return score;
 
-        // If Minimizer wins
         if (score == -10)
             return score;
 
-        // N more moves and no winner
         if (board.boardIsFull())
             return 0;
 
-        // If maximizer's move
         int best;
-        if (isMax) {
+        if (isMax) {      // maximizer's move
             best = -1000;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -125,9 +107,7 @@ public class AI extends Player {
                     }
                 }
             }
-        }
-        // If minimizer's move
-        else {
+        } else {            // minimizer's move
             best = 1000;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -144,6 +124,4 @@ public class AI extends Player {
         return best;
     }
 }
-
-
 

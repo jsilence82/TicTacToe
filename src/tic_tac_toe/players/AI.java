@@ -61,29 +61,30 @@ public class AI extends Player {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
-                    String temp = board.getBoard()[i][j];
-                    int[] move = {i, j};
-                    board.placePlayersMark(move, computer);
-                    int moveValue = minMax(board, 0, false);
-                    board.placePlayersMark(move, temp);
+                if (Objects.equals(board.getBoard()[i][j], opponent) || Objects.equals(board.getBoard()[i][j], computer)) {
+                    continue;
+                }
+                String temp = board.getBoard()[i][j];
+                int[] move = {i, j};
+                board.placePlayersMark(move, computer);
+                int moveValue = minMax(board, 0, false);
+                board.placePlayersMark(move, temp);
 
-                    // If the value of the current move is more than the best value, then update
-                    if (moveValue > bestValue) {
-                        bestMove[0] = i;
-                        bestMove[1] = j;
-                        bestValue = moveValue;
-                    }
+                // If the value of the current move is more than the best value, then update
+                if (moveValue > bestValue) {
+                    bestMove[0] = i;
+                    bestMove[1] = j;
+                    bestValue = moveValue;
                 }
             }
         }
         return bestMove;
     }
 
-    private int minMax(Board board, int depth, Boolean isMax) {
+    private int minMax(Board board, int depth, Boolean isMaximizer) {
         int score = evaluate(board);
 
-        // If Maximizer wins return 10. Minimizer win return -10. If tie return 0.
+        // If AI wins return 10. Opponent win return -10. If tie return 0.
         if (score == 10)
             return score;
 
@@ -94,30 +95,32 @@ public class AI extends Player {
             return 0;
 
         int best;
-        if (isMax) {      // maximizer's move
+        if (isMaximizer) {      // Maximizer. AI move
             best = -1000;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
-                        String temp = board.getBoard()[i][j];
-                        int[] move = {i, j};
-                        board.placePlayersMark(move, computer);
-                        best = Math.max(best, minMax(board, depth + 1, false));
-                        board.placePlayersMark(move, temp);
+                    if (Objects.equals(board.getBoard()[i][j], opponent) || Objects.equals(board.getBoard()[i][j], computer)) {
+                        continue;
                     }
+                    String temp = board.getBoard()[i][j];
+                    int[] move = {i, j};
+                    board.placePlayersMark(move, computer);
+                    best = Math.max(best, minMax(board, depth + 1, false));
+                    board.placePlayersMark(move, temp);
                 }
             }
-        } else {            // minimizer's move
+        } else {            // Minimizer opponent move
             best = 1000;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
-                        String temp = board.getBoard()[i][j];
-                        int[] move = {i, j};
-                        board.placePlayersMark(move, opponent);
-                        best = Math.min(best, minMax(board, depth + 1, true));
-                        board.placePlayersMark(move, temp);
+                    if (Objects.equals(board.getBoard()[i][j], opponent) || Objects.equals(board.getBoard()[i][j], computer)) {
+                        continue;
                     }
+                    String temp = board.getBoard()[i][j];
+                    int[] move = {i, j};
+                    board.placePlayersMark(move, opponent);
+                    best = Math.min(best, minMax(board, depth + 1, true));
+                    board.placePlayersMark(move, temp);
                 }
             }
         }

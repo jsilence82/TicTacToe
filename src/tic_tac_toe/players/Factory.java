@@ -1,10 +1,10 @@
-package tic_tac_toe;
+package tic_tac_toe.players;
 
-import tic_tac_toe.players.*;
+import tic_tac_toe.Board;
 
 public class Factory {
 
-    public Player playerFactory(int entry, String playersMark, Board board) {
+    public static Player playerFactory(int entry, String playersMark, Board board) {
         return switch (entry) {
          case 1 -> new HumanPlayer(playersMark);
          case 2 -> new Computer(board, playersMark);

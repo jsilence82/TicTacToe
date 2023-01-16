@@ -7,7 +7,7 @@ public class HumanPlayer extends Player {
     private Scanner input = new Scanner(System.in);
 
 
-    public HumanPlayer(String playersMark) {
+    HumanPlayer(String playersMark) {
         super("name", playersMark);
         System.out.print("Player " + playerNumber + " name ?: ");
         String playersName = input.next();

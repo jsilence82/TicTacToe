@@ -1,13 +1,12 @@
 package tic_tac_toe;
 
-import tic_tac_toe.players.Board;
+import tic_tac_toe.players.Factory;
 import tic_tac_toe.players.Player;
 
 public class TicTacToe {
 
     private static Player player1;
     private static Player player2;
-    private static final Factory factory = new Factory();
 
     public TicTacToe() {
         gameLoop();
@@ -17,8 +16,8 @@ public class TicTacToe {
         SelectionScreen select = new SelectionScreen();
         int player = select.selectPlayer(1);
         int opponent = select.selectPlayer(2);
-        player1 = factory.playerFactory(player, "X", board);
-        player2 = factory.playerFactory(opponent, "O", board);
+        player1 = Factory.playerFactory(player, "X", board);
+        player2 = Factory.playerFactory(opponent, "O", board);
     }
 
     public void gameLoop() {

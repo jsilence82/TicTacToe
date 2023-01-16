@@ -5,7 +5,7 @@ public abstract class Player {
     private String playerName;
     private final String playersMark;
 
-    public Player(String playerName, String playersMark) {
+    Player(String playerName, String playersMark) {
         this.playerName = playerName;
         this.playersMark = playersMark;
         playerNumber++;

@@ -1,5 +1,7 @@
 package tic_tac_toe.players;
 
+import tic_tac_toe.Board;
+
 import java.util.Objects;
 
 public class AI extends Player {
@@ -12,7 +14,7 @@ public class AI extends Player {
         int row, col;
     }
 
-    public AI(Board board, String playersMark) {
+    AI(Board board, String playersMark) {
         super("AI Computer", playersMark);
         this.board = board;
         this.computer = playersMark;
@@ -67,6 +69,20 @@ public class AI extends Player {
         }
         return 0;
     }
+
+    private int[] iterateMove() {
+        int[] move = new int[2];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
+                     move[0] = i;
+                     move[1] = j;
+                }
+            }
+        }
+        return move;
+    }
+
 
     private Move findBestMove(Board board) {
         int bestValue = -1000;

@@ -9,7 +9,7 @@ public class HumanPlayer extends Player {
 
     HumanPlayer(String playersMark) {
         super("name", playersMark);
-        System.out.print("Player " + playerNumber + " name ?: ");
+        System.out.print("Give player " + playerNumber + " a name: ");
         String playersName = input.next();
         setPlayerName(playersName);
         System.out.println(getPlayerName() + " will play as " + getPlayersMark());

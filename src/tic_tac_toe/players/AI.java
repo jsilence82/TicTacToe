@@ -1,5 +1,6 @@
 package tic_tac_toe.players;
 
+import tic_tac_toe.Board;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -67,7 +68,6 @@ public class AI extends Player{
     }
 
     private boolean mapIsFull(){
-
             for(Entry<Integer, String> entry : mapped.entrySet()){
             if(entry.getValue().equals("1") || entry.getValue().equals("2") || entry.getValue().equals("3")
             || entry.getValue().equals("4") || entry.getValue().equals("5") || entry.getValue().equals("6")

@@ -1,13 +1,15 @@
 package tic_tac_toe.players;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Objects;
 
-public class AI extends Player {
+public class AI extends Player{
 
-    private final Board board;
-    private final String computer;
-    private final String opponent;
+    Board board;
+    String computer;
+    String opponent;
+    HashMap<Integer, String> mapped;
 
     public AI(Board board, String playersMark) {
         super("AI Computer", playersMark);
@@ -18,36 +20,45 @@ public class AI extends Player {
         } else {
             this.opponent = "O";
         }
+        initializeMap();
         System.out.println(getPlayerName() + " will play as " + getPlayersMark());
     }
 
     @Override
     public int pickASpace() {
         System.out.println("The AI evaluates and is picking...");
-        int[] bestMove = findBestMove(board);
-        return board.boardCoordinatesToSpace(bestMove[0], bestMove[1]);
+        HashMap<Integer, String> updatedMap = updateMapped();
+        return findBestMove(updatedMap);
     }
 
-    private int evaluate(Board board) {
-        HashMap<Integer, String> mappedBoard = new HashMap<>();
-        int hashKey = 1;
+    private void initializeMap() {
+        mapped = new HashMap<>();
+        for (int i = 1; i <= 9; i++) {
+            mapped.put(i, String.valueOf(i));
+        }
+    }
+
+    private HashMap<Integer, String> updateMapped() {
+        int count = 1;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                mappedBoard.put(hashKey, board.getBoard()[i][j]);
-                hashKey++;
+                mapped.put(count, board.getBoard()[i][j]);
+                count++;
             }
         }
+        return mapped;
+    }
 
-        int[][] winningConditions = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, // rows
-                {1, 4, 7}, {2, 5, 8}, {3, 6, 9},   // columns
-                {1, 5, 9}, {3, 5, 7}}; // diagonals
 
-        for (int[] spaces : winningConditions) {
-            if (Objects.equals(mappedBoard.get(spaces[0]), mappedBoard.get(spaces[1])) &&
-                    Objects.equals(mappedBoard.get(spaces[1]), mappedBoard.get(spaces[2]))) {
-                if (Objects.equals(mappedBoard.get(spaces[0]), computer)) {
+    private int evaluate(HashMap<Integer, String> mapped) {
+        int[][] winningConditions = {{1, 2, 3}, {4,5,6}, {7, 8 ,9}, {1, 4, 7}, {2, 5, 8},
+                {3, 6, 9}, {1, 5, 9}, {3, 5, 7}};
+        for(int[] numbers: winningConditions){
+            if(Objects.equals(mapped.get(numbers[0]), mapped.get(numbers[1])) &&
+            Objects.equals(mapped.get(numbers[1]), mapped.get(numbers[2]))){
+                if(Objects.equals(mapped.get(numbers[0]), computer)){
                     return +10;
-                } else if (Objects.equals(mappedBoard.get(spaces[0]), opponent)) {
+                } else if (Objects.equals(mapped.get(numbers[0]), opponent)) {
                     return -10;
                 }
             }
@@ -55,76 +66,78 @@ public class AI extends Player {
         return 0;
     }
 
-    private int[] findBestMove(Board board) {
+    private boolean mapIsFull(){
+
+            for(Entry<Integer, String> entry : mapped.entrySet()){
+            if(entry.getValue().equals("1") || entry.getValue().equals("2") || entry.getValue().equals("3")
+            || entry.getValue().equals("4") || entry.getValue().equals("5") || entry.getValue().equals("6")
+            || entry.getValue().equals("7") || entry.getValue().equals("8") || entry.getValue().equals("9")){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int findBestMove(HashMap<Integer, String> mapped) {
         int bestValue = -1000;
-        int[] bestMove = new int[2];
+        int bestMove = -1;
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
-                    String temp = board.getBoard()[i][j];
-                    int[] move = {i, j};
-                    board.placePlayersMark(move, computer);
-                    int moveValue = minMax(board, 0, false);
-                    board.placePlayersMark(move, temp);
+        for (Entry<Integer, String> space : mapped.entrySet()) {
+            if (!space.getValue().equals(computer) && !space.getValue().equals(opponent)) {
+                String temp = space.getValue();
+                int move = space.getKey();
+                mapped.put(move, computer);
+                int moveValue = minMax(mapped, 0, false);
+                mapped.put(move, temp);
 
-                    // If the value of the current move is more than the best value, then update
-                    if (moveValue > bestValue) {
-                        bestMove[0] = i;
-                        bestMove[1] = j;
-                        bestValue = moveValue;
-                    }
+                if (moveValue > bestValue) {
+                    bestMove = space.getKey();
+                    bestValue = moveValue;
                 }
             }
         }
         return bestMove;
     }
 
-    private int minMax(Board board, int depth, Boolean isMax) {
-        int score = evaluate(board);
-
-        // If Maximizer wins return 10. Minimizer win return -10. If tie return 0.
-        if (score == 10)
+    private int minMax(HashMap<Integer, String> mapped, int depth, Boolean isMax) {
+        int score = evaluate(mapped);
+        
+        if (score == 10) // Maximizer wins
+            return score;
+        
+        if (score == -10) // Minimizer wins
             return score;
 
-        if (score == -10)
-            return score;
-
-        if (board.boardIsFull())
+        if (mapIsFull()) // No winner
             return 0;
 
+        //  maximizer's move
         int best;
-        if (isMax) {      // maximizer's move
+        if (isMax) {
             best = -1000;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
-                        String temp = board.getBoard()[i][j];
-                        int[] move = {i, j};
-                        board.placePlayersMark(move, computer);
-                        best = Math.max(best, minMax(board, depth + 1, false));
-                        board.placePlayersMark(move, temp);
-                    }
+            for (Entry<Integer, String> space : mapped.entrySet()) {
+                if (!space.getValue().equals(computer) && !space.getValue().equals(opponent)) {
+                    String temp = space.getValue();
+                    int move = space.getKey();
+                    mapped.put(move, computer);
+                    best = Math.max(best, minMax(mapped, depth + 1, false));
+                    mapped.put(move, temp);
                 }
             }
-        } else {            // minimizer's move
+        }
+        // minimizer's move
+        else {
             best = 1000;
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (!Objects.equals(board.getBoard()[i][j], opponent) && !Objects.equals(board.getBoard()[i][j], computer)) {
-                        String temp = board.getBoard()[i][j];
-                        int[] move = {i, j};
-                        board.placePlayersMark(move, opponent);
-                        best = Math.min(best, minMax(board, depth + 1, true));
-                        board.placePlayersMark(move, temp);
-                    }
+            for (Entry<Integer, String> space : mapped.entrySet()) {
+                if (!space.getValue().equals(computer) && !space.getValue().equals(opponent)) {
+                    String temp = space.getValue();
+                    int move = space.getKey();
+                    mapped.put(move, opponent);
+                    best = Math.min(best, minMax(mapped, depth + 1, true));
+                    mapped.put(move, temp);
                 }
             }
         }
         return best;
     }
 }
-
-
-
-

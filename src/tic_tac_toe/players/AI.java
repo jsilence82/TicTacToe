@@ -11,7 +11,7 @@ public class AI extends Player{
     String opponent;
     HashMap<Integer, String> mapped;
 
-    public AI(Board board, String playersMark) {
+    AI(Board board, String playersMark) {
         super("AI Computer", playersMark);
         this.board = board;
         this.computer = playersMark;

@@ -2,14 +2,9 @@ package tic_tac_toe;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class Board {
-
-
-
 
     private HashMap<Integer, String> board;
 
@@ -37,14 +32,7 @@ public class Board {
     }
 
     public boolean boardIsFull(){
-        for(Map.Entry<Integer, String> entry : board.entrySet()){
-            if(entry.getValue().equals("1") || entry.getValue().equals("2") || entry.getValue().equals("3")
-                    || entry.getValue().equals("4") || entry.getValue().equals("5") || entry.getValue().equals("6")
-                    || entry.getValue().equals("7") || entry.getValue().equals("8") || entry.getValue().equals("9")){
-                return false;
-            }
-        }
-        return true;
+            return board.values().stream().noneMatch("123456789"::contains);
     }
 
     public boolean checkWinner(String playersMark){

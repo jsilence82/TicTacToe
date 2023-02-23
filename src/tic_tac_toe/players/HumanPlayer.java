@@ -1,5 +1,6 @@
 package tic_tac_toe.players;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class HumanPlayer extends Player {
@@ -30,10 +31,13 @@ public class HumanPlayer extends Player {
             int pick = input.nextInt();
             if (pick <= 9 && pick > 0) {
                 return pick;
+            } else {
+                throw new IllegalArgumentException();
             }
-            System.out.println("Not a valid space. Try again.");
-        } catch (Exception e) {
-            System.out.println("Something went wrong. Try again.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Your pick should be between 1 and 9");
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid. Your pick should be between 1 and 9. Try again.");
         }
         return pickASpace();
     }

@@ -18,7 +18,7 @@ public class Computer extends Player {
     @Override
     public int pickASpace() {
         int pick = random.nextInt(9) + 1;
-        if(board.spaceOccupied(board.spaceToBoardCoordinates(pick))){
+        if(board.spaceOccupied(pick)){
             return pickASpace();
         }
         System.out.println("The computer is randomly picking...");

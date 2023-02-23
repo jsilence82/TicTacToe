@@ -10,7 +10,6 @@ public class AI extends Player{
     Board board;
     String computer;
     String opponent;
-    HashMap<Integer, String> mapped;
 
     AI(Board board, String playersMark) {
         super("AI Computer", playersMark);
@@ -21,33 +20,13 @@ public class AI extends Player{
         } else {
             this.opponent = "O";
         }
-        initializeMap();
         System.out.println(getPlayerName() + " will play as " + getPlayersMark());
     }
 
     @Override
     public int pickASpace() {
         System.out.println("The AI evaluates and is picking...");
-        HashMap<Integer, String> updatedMap = updateMapped();
-        return findBestMove(updatedMap);
-    }
-
-    private void initializeMap() {
-        mapped = new HashMap<>();
-        for (int i = 1; i <= 9; i++) {
-            mapped.put(i, String.valueOf(i));
-        }
-    }
-
-    private HashMap<Integer, String> updateMapped() {
-        int count = 1;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                mapped.put(count, board.getBoard()[i][j]);
-                count++;
-            }
-        }
-        return mapped;
+        return findBestMove(board.getBoard());
     }
 
 
@@ -67,16 +46,6 @@ public class AI extends Player{
         return 0;
     }
 
-    private boolean mapIsFull(){
-            for(Entry<Integer, String> entry : mapped.entrySet()){
-            if(entry.getValue().equals("1") || entry.getValue().equals("2") || entry.getValue().equals("3")
-            || entry.getValue().equals("4") || entry.getValue().equals("5") || entry.getValue().equals("6")
-            || entry.getValue().equals("7") || entry.getValue().equals("8") || entry.getValue().equals("9")){
-                return false;
-            }
-        }
-        return true;
-    }
 
     private int findBestMove(HashMap<Integer, String> mapped) {
         int bestValue = -1000;
@@ -108,7 +77,7 @@ public class AI extends Player{
         if (score == -10) // Minimizer wins
             return score;
 
-        if (mapIsFull()) // No winner
+        if (board.boardIsFull()) // No winner
             return 0;
 
         //  maximizer's move

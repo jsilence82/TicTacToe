@@ -1,112 +1,75 @@
 package tic_tac_toe;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class Board {
 
 
-    private final String[][] board = new String[3][3];
+
+
+    private HashMap<Integer, String> board;
 
     public Board() {
         initializeBoard();
     }
 
-    public String[][] getBoard() {
+    public HashMap<Integer, String> getBoard() {
         return board;
     }
 
-    public void initializeBoard() {
-        int count = 1;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                board[i][j] = String.valueOf(count++);
-            }
+    private void initializeBoard() {
+        board = new HashMap<>();
+        for (int i = 1; i <= 9; i++) {
+            board.put(i, String.valueOf(i));
         }
     }
 
-    public void placePlayersMark(int[] playersPick, String playerMark) {
-        board[playersPick[0]][playersPick[1]] = playerMark;
+    public void placePlayersMark(int playersPick, String playersMark){
+        board.put(playersPick, playersMark);
     }
 
-    public int[] spaceToBoardCoordinates(int space) {
-        int[] coordinates = new int[2];
-        switch (space) {
-            case 1:
-                break;
-            case 2:
-                coordinates[1] = 1;
-                break;
-            case 3:
-                coordinates[1] = 2;
-                break;
-            case 4:
-                coordinates[0] = 1;
-                break;
-            case 5:
-                coordinates[0] = 1;
-                coordinates[1] = 1;
-                break;
-            case 6:
-                coordinates[0] = 1;
-                coordinates[1] = 2;
-                break;
-            case 7:
-                coordinates[0] = 2;
-                break;
-            case 8:
-                coordinates[0] = 2;
-                coordinates[1] = 1;
-                break;
-            case 9:
-                coordinates[0] = 2;
-                coordinates[1] = 2;
-                break;
-        }
-        return coordinates;
+    public boolean spaceOccupied(int playersPick){
+        return board.get(playersPick).equals("X") || board.get(playersPick).equals("O");
     }
 
-    public int boardCoordinatesToSpace(int row, int column) {
-        return Integer.parseInt(getBoard()[row][column]);
-    }
-
-    public void printBoard() {
-        System.out.println();
-        for (String s : Arrays.asList(board[0][0] + " | " + board[0][1] + " | " + board[0][2],
-                "- + - + -",
-                board[1][0] + " | " + board[1][1] + " | " + board[1][2],
-                "- + - + -",
-                board[2][0] + " | " + board[2][1] + " | " + board[2][2])) {
-            System.out.println(s);
-        }
-        System.out.println();
-    }
-
-    public boolean spaceOccupied(int[] space) {
-        return board[space[0]][space[1]].equals("X") || board[space[0]][space[1]].equals("O");
-    }
-
-    public boolean boardIsFull() {
-        for (String[] strings : board) {
-            for (String string : strings) {
-                if (Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9").contains(string)) {
-                    return false;
-                }
+    public boolean boardIsFull(){
+        for(Map.Entry<Integer, String> entry : board.entrySet()){
+            if(entry.getValue().equals("1") || entry.getValue().equals("2") || entry.getValue().equals("3")
+                    || entry.getValue().equals("4") || entry.getValue().equals("5") || entry.getValue().equals("6")
+                    || entry.getValue().equals("7") || entry.getValue().equals("8") || entry.getValue().equals("9")){
+                return false;
             }
         }
         return true;
     }
 
-    public boolean checkWinner(String playerMark) {
-        return (IntStream.of(0, 1, 2).allMatch(i -> Objects.equals(board[0][i], playerMark))) ||
-                (IntStream.of(0, 1, 2).allMatch(j -> Objects.equals(board[1][j], playerMark))) ||
-                (IntStream.of(0, 1, 2).allMatch(k -> Objects.equals(board[2][k], playerMark))) ||
-                (IntStream.of(0, 1, 2).allMatch(l -> Objects.equals(board[l][0], playerMark))) ||
-                (IntStream.of(0, 1, 2).allMatch(m -> Objects.equals(board[m][1], playerMark))) ||
-                (IntStream.of(0, 1, 2).allMatch(n -> Objects.equals(board[n][2], playerMark))) ||
-                (Objects.equals(board[0][0], playerMark) && Objects.equals(board[1][1], playerMark) && Objects.equals(board[2][2], playerMark)) ||
-                (Objects.equals(board[0][2], playerMark) && Objects.equals(board[1][1], playerMark) && Objects.equals(board[2][0], playerMark));
+    public boolean checkWinner(String playersMark){
+        int[][] winningConditions = {{1, 2, 3}, {4,5,6}, {7, 8 ,9}, {1, 4, 7}, {2, 5, 8},
+                {3, 6, 9}, {1, 5, 9}, {3, 5, 7}};
+        for(int[] numbers: winningConditions){
+            if(Objects.equals(board.get(numbers[0]), board.get(numbers[1])) &&
+                    Objects.equals(board.get(numbers[1]), board.get(numbers[2]))){
+                if(Objects.equals(board.get(numbers[0]), playersMark)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    public void printBoard(){
+        System.out.println();
+        for (String s : Arrays.asList(board.get(1) + " | " + board.get(2) + " | " + board.get(3),
+                "- + - + -",
+                board.get(4) + " | " + board.get(5) + " | " + board.get(6),
+                "- + - + -",
+                board.get(7) + " | " + board.get(8) + " | " + board.get(9))) {
+            System.out.println(s);
+        }
+        System.out.println();
     }
 }

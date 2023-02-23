@@ -16,8 +16,10 @@ public class TicTacToe {
         SelectionScreen select = new SelectionScreen();
         int player = select.selectPlayer(1);
         int opponent = select.selectPlayer(2);
-        player1 = Factory.playerFactory(player, "X", board);
-        player2 = Factory.playerFactory(opponent, "O", board);
+        String playerOneMark = "X";
+        String playerTwoMark = "O";
+        player1 = Factory.playerFactory(player, playerOneMark, board);
+        player2 = Factory.playerFactory(opponent, playerTwoMark, board);
     }
 
     public void gameLoop() {
@@ -33,7 +35,7 @@ public class TicTacToe {
                 System.out.println("\nIt's a draw!");
                 break;
             } else {
-                int[] playersPick = board.spaceToBoardCoordinates(players[turn].pickASpace());
+                int playersPick = players[turn].pickASpace();
                 if (board.spaceOccupied(playersPick)) {
                     System.out.println("\nOops. That spot is taken. Try again.");
                     board.printBoard();
